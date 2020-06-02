@@ -1,15 +1,17 @@
-.parcoords > svg, .parcoords > canvas {
+.parcoords>svg,
+.parcoords>canvas {
     font: 14px sans-serif;
     position: absolute;
 }
 
-.parcoords > canvas {
+.parcoords>canvas {
     pointer-events: none;
 }
 
 .parcoords text.label {
     cursor: default;
     fill: black;
+    font-size: 16px;
 }
 
 .parcoords rect.background {
@@ -29,7 +31,8 @@
     stroke: rgba(0, 0, 0, 0.6);
 }
 
-.parcoords .axis line, .parcoords .axis path {
+.parcoords .axis line,
+.parcoords .axis path {
     fill: none;
     stroke: #222;
     shape-rendering: crispEdges;
@@ -47,7 +50,7 @@
 }
 
 .parcoords canvas.dimmed {
-  opacity: 0.85;
+    opacity: 0.85;
 }
 
 .parcoords {
