@@ -11314,7 +11314,7 @@
         })
         .append("svg:text")
         .attr("text-anchor", "middle")
-        .attr("y", 0)
+        .attr("y", -10)
         .attr(
           "transform",
           "translate(0,-5) rotate(" + config.dimensionTitleRotation + ")"
