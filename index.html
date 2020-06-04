@@ -61,7 +61,12 @@
           d.id = d.id || i;
         });
 
-        parcoords.data(data).render().reorderable().brushMode("1D-axes-multi");
+        parcoords
+          .margin({ top: 60, bottom: 10, left: 80, right: 20 })
+          .data(data)
+          .render()
+          .reorderable()
+          .brushMode("1D-axes");
 
         // setting up grid
         var column_keys = d3.keys(data[0]);
