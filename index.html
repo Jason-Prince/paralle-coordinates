@@ -61,7 +61,7 @@
           d.id = d.id || i;
         });
 
-        parcoords.data(data).render().reorderable().brushMode("1D-axes");
+        parcoords.data(data).render().reorderable().brushMode("1D-axes-multi");
 
         // setting up grid
         var column_keys = d3.keys(data[0]);
