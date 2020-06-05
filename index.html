@@ -64,6 +64,7 @@
         parcoords
           .margin({ top: 60, bottom: 10, left: 80, right: 20 })
           .data(data)
+          .hideAxis(["id"])
           .render()
           .reorderable()
           .brushMode("1D-axes");
