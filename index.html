@@ -26,6 +26,10 @@
     />
     <link rel="stylesheet" type="text/css" href="./dist/parcoords.css" />
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <input type="file" id="uploader" />
@@ -60,17 +64,23 @@
         data.forEach(function (d, i) {
           d.id = d.id || i;
         });
-
         parcoords
           .margin({ top: 60, bottom: 10, left: 80, right: 20 })
           .data(data)
           .hideAxis(["id"])
           .render()
           .reorderable()
-          .brushMode("1D-axes");
+          .brushMode("1D-axes")
+          .color(function (d) {
+            if (d["HVAC System"] == "WSHP") return "rgb(64, 130, 165)";
+            if (d["HVAC System"] == "VRF") return "rgb(40, 122, 107)";
+            if (d["HVAC System"] == "Improved PSZ") return "rgb(144, 76, 51)";
+            if (d["HVAC System"] == "90.1 2010 PSZ") return "rgb(35, 31, 32)";
+          });
 
         // setting up grid
         var column_keys = d3.keys(data[0]);
+        // console.log("column keys", column_keys);
         var columns = column_keys.map(function (key, i) {
           return {
             id: key,
@@ -79,6 +89,7 @@
             sortable: true,
           };
         });
+        console.log("columns", columns);
 
         var options = {
           enableCellNavigation: true,

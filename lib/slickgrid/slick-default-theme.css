@@ -13,8 +13,8 @@ classes should alter those!
   border-right: 1px solid silver;
 }
 
-.slick-header-column:hover, .slick-header-column-active {
-}
+.slick-header-column:hover,
+.slick-header-column-active {}
 
 .slick-headerrow {
   background: #fafafa;
@@ -43,6 +43,7 @@ classes should alter those!
 }
 
 .slick-cell {
+  font-family: Roboto;
   padding-left: 4px;
   padding-right: 4px;
 }
@@ -57,11 +58,9 @@ classes should alter those!
   margin-right: 5px;
 }
 
-.slick-group-toggle.expanded {
-}
+.slick-group-toggle.expanded {}
 
-.slick-group-toggle.collapsed {
-}
+.slick-group-toggle.collapsed {}
 
 .slick-group-totals {
   color: gray;
@@ -91,7 +90,7 @@ classes should alter those!
 
 .slick-row.loading {
   opacity: 0.5;
-  filter: alpha(opacity = 50);
+  filter: alpha(opacity=50);
 }
 
 .slick-cell.invalid {

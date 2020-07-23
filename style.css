@@ -29,6 +29,7 @@ html {
 }
 
 text {
+    font-family: Roboto;
     text-shadow: #fff 0 0 10px;
     font-weight: bold;
 }

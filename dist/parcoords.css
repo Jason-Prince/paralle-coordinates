@@ -1,6 +1,6 @@
 .parcoords>svg,
 .parcoords>canvas {
-    font: 14px sans-serif;
+    font-family: 'Montserrat', sans-serif;
     position: absolute;
 }
 
@@ -12,6 +12,7 @@
     cursor: default;
     fill: black;
     font-size: 16px;
+    font-family: Montserrat;
 }
 
 .parcoords rect.background {
