@@ -21,6 +21,7 @@
   <div id="grid"></div>
   <!-- <div id="pager"></div> -->
 
+  <script src="./lib/textwrap.js"></script>
   <script src="./lib/slickgrid/jquery-1.7.min.js"></script>
   <script src="./lib/slickgrid/jquery.event.drag-2.0.min.js"></script>
   <script src="./lib/slickgrid/slick.core.js"></script>
@@ -30,6 +31,7 @@
   <script src="./lib/d3.v5.min.js"></script>
   <script src="./dist/parcoords.standalone.js"></script>
   <script src="./lib/divgrid.js"></script>
+  
   <script>
     var parcoords = ParCoords()("#example")
       .alpha(0.4)
@@ -60,6 +62,7 @@
         .render()
         .reorderable()
         .brushMode("1D-axes-multi")
+        .brushedColor("#069")
         .color(function (d) {
           console.log("d", d)
           if (d["Infiltration CFMpSF"] == 0.0448) return "rgb(64, 130, 165)";
@@ -71,6 +74,9 @@
       var column_keys = d3.keys(data[0]);
       // console.log("column keys", column_keys);
       var columns = column_keys.map(function (key, i) {
+        for (col in columns) {
+          wrap(col, 3);
+        }
         return {
           id: key,
           name: key,
@@ -79,6 +85,7 @@
         };
       });
       console.log("columns", columns);
+      
 
       var options = {
         enableCellNavigation: true,
