@@ -44,6 +44,7 @@
 
     // create chart from loaded data
     function parallelCoordinates(data) {
+      console.log(data)
       // slickgrid needs each data element to have an id
       data.forEach(function (d, i) {
         d.id = d.id || i;
@@ -60,11 +61,17 @@
         .render()
         .reorderable()
         .brushMode("1D-axes-multi")
+        .brushedColor(function (d) {
+          if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
+          if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
+          if (d["Infil"] == 0.15) return "rgb(144, 76, 51)";
+          if (d["Infil"] == 0.1) return "rgb(0,255,255)";
+        })
         .color(function (d) {
-          console.log("d", d)
-          if (d["Infiltration CFMpSF"] == 0.0448) return "rgb(64, 130, 165)";
-          if (d["Infiltration CFMpSF"] == 0.028) return "rgb(40, 122, 107)";
-          if (d["Infiltration CFMpSF"] == 0.0112) return "rgb(144, 76, 51)";
+          if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
+          if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
+          if (d["Infil"] == 0.15) return "rgb(144, 76, 51)";
+          if (d["Infil"] == 0.1) return "rgb(0,255,255)";
         });
 
       // setting up grid
@@ -78,7 +85,7 @@
           sortable: true,
         };
       });
-      console.log("columns", columns);
+      // console.log("columns", columns);
 
       var options = {
         enableCellNavigation: true,
