@@ -63,16 +63,12 @@
         .render()
         .reorderable()
         .brushMode("1D-axes-multi")
-<<<<<<< HEAD
         .brushedColor(function (d) {
           if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
           if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
           if (d["Infil"] == 0.15) return "rgb(144, 76, 51)";
           if (d["Infil"] == 0.1) return "rgb(0,255,255)";
         })
-=======
-        .brushedColor("#069")
->>>>>>> 6f7b13d099cbbd303874fe58ab2713b32cd74419
         .color(function (d) {
           if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
           if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
@@ -94,12 +90,9 @@
           sortable: true,
         };
       });
-<<<<<<< HEAD
       // console.log("columns", columns);
-=======
       console.log("columns", columns);
       
->>>>>>> 6f7b13d099cbbd303874fe58ab2713b32cd74419
 
       var options = {
         enableCellNavigation: true,
