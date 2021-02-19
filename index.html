@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linking to SlickGrid</title>
+  <title>Griffin EnerG</title>
   <link rel="stylesheet" href="./lib/slickgrid/slick.grid.css" type="text/css" />
   <link rel="stylesheet" href="./lib/slickgrid/jquery-ui-1.8.16.custom.css" type="text/css" />
   <link rel="stylesheet" href="./lib/slickgrid/examples.css" type="text/css" />
@@ -16,8 +16,8 @@
 </head>
 
 <body>
-  <input type="file" id="uploader" />
-  <div id="example" class="parcoords" style="height: 240px;"></div>
+  <!-- <input type="file" id="uploader" /> -->
+  <div id="example" class="parcoords" ></div>
   <div id="grid"></div>
   <!-- <div id="pager"></div> -->
 
@@ -33,25 +33,13 @@
   <script src="./lib/divgrid.js"></script>
   
   <script>
-    var parcoords = ParCoords()("#example")
-      .alpha(0.4)
-      .mode("queue") // progressive rendering
-      .height(d3.max([document.body.clientHeight - 200, 220]))
-      .margin({
-        top: 36,
-        left: 0,
-        right: 0,
-        bottom: 16,
-      });
-
-    // create chart from loaded data
+  // create chart from loaded data
     function parallelCoordinates(data) {
-      console.log(data)
-      // slickgrid needs each data element to have an id
-      data.forEach(function (d, i) {
-        d.id = d.id || i;
-      });
+      var parcoords = ParCoords()("#example")
       parcoords
+        .alpha(0.4)
+        .height(d3.max([document.body.clientHeight - 200, 220]))
+        .mode("queue")
         .margin({
           top: 60,
           bottom: 10,
@@ -74,8 +62,14 @@
           if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
           if (d["Infil"] == 0.15) return "rgb(122, 40, 55)";
           if (d["Infil"] == 0.1) return "rgb(165,100,64)";
-        });
-
+        })
+      
+      
+      
+      // slickgrid needs each data element to have an id
+      data.forEach(function (d, i) {
+        d.id = d.id || i;
+      });
       // setting up grid
       var column_keys = d3.keys(data[0]);
       // console.log("column keys", column_keys);
@@ -96,8 +90,8 @@
 
       var options = {
         enableCellNavigation: true,
-        enableColumnReorder: false,
-        multiColumnSort: false,
+        enableColumnReorder: true,
+        multiColumnSort: true,
       };
 
       var dataView = new Slick.Data.DataView();
@@ -163,24 +157,34 @@
     }
 
     // CSV Uploader
-    var uploader = document.getElementById("uploader");
-    var reader = new FileReader();
+    // var uploader = document.getElementById("uploader");
+    // var reader = new FileReader();
 
-    reader.onload = function (e) {
-      var contents = e.target.result;
-      var data = d3.csvParse(contents);
-      parallelCoordinates(data);
+    // reader.onload = function (e) {
+    //   var contents = e.target.result;
+    //   var data = d3.csvParse(contents);
+    //   parallelCoordinates(data);
 
-      // remove button, since re-initializing doesn't work for now
-      uploader.parentNode.removeChild(uploader);
-    };
+    //   // remove button, since re-initializing doesn't work for now
+    //   uploader.parentNode.removeChild(uploader);
+    // };
 
-    uploader.addEventListener("change", handleFiles, false);
+    d3.csv('PSB-P2-Results v10v5rev2.csv')
+      .then(function(data) {
+        parallelCoordinates(data);
+      // data is now whole data set
+      // draw chart in here!
+      })
+      .catch(function(error){
+      // handle error   
+      })
 
-    function handleFiles() {
-      var file = this.files[0];
-      reader.readAsText(file);
-    }
+    // uploader.addEventListener("change", handleFiles, false);
+
+    // function handleFiles() {
+    //   var file = this.files[0];
+    //   reader.readAsText(file);
+    // }
   </script>
 </body>
 
