@@ -1,191 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Griffin EnerG</title>
-  <link rel="stylesheet" href="./lib/slickgrid/slick.grid.css" type="text/css" />
-  <link rel="stylesheet" href="./lib/slickgrid/jquery-ui-1.8.16.custom.css" type="text/css" />
-  <link rel="stylesheet" href="./lib/slickgrid/examples.css" type="text/css" />
-  <link rel="stylesheet" href="./lib/slickgrid/slick.pager.css" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="./dist/parcoords.css" />
-  <link rel="stylesheet" type="text/css" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Roboto&display=swap"
-    rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallel Coordinates</title>
+    <link rel="stylesheet" href="./styles/index.css">
+    <script src="./lib/d3.v5.min.js"></script>
+    <script src="./lib/divgrid.js"></script>
+    <script src="./lib/jquery-1.7.min.js"></script>
+    <script src="./lib/jquery.event.drag-2.0.min.js"></script>
+    <script src="./lib/parcoords.standalone.js"></script>
+    <script src="./lib/slick.core.js"></script>
+    <script src="./lib/slick.dataview.js"></script>
+    <script src="./lib/slick.grid.js"></script>
+    <script src="./lib/slick.pager.js"></script>
+    <script src="./lib/underscore.js"></script>
 </head>
 
 <body>
-  <!-- <input type="file" id="uploader" /> -->
-  <div id="example" class="parcoords" ></div>
-  <div id="grid"></div>
-  <!-- <div id="pager"></div> -->
+    <div id="example" class="parcoords" style="height:600px;">
+        
+    </div>
+    <pre id=json><code></code></pre>
+    <div id="grid">
 
-  <script src="./lib/textwrap.js"></script>
-  <script src="./lib/slickgrid/jquery-1.7.min.js"></script>
-  <script src="./lib/slickgrid/jquery.event.drag-2.0.min.js"></script>
-  <script src="./lib/slickgrid/slick.core.js"></script>
-  <script src="./lib/slickgrid/slick.grid.js"></script>
-  <script src="./lib/slickgrid/slick.pager.js"></script>
-  <script src="./lib/slickgrid/slick.dataview.js"></script>
-  <script src="./lib/d3.v5.min.js"></script>
-  <script src="./dist/parcoords.standalone.js"></script>
-  <script src="./lib/divgrid.js"></script>
-  
-  <script>
-  // create chart from loaded data
-    function parallelCoordinates(data) {
-      var parcoords = ParCoords()("#example")
-      parcoords
-        .alpha(0.4)
-        .height(d3.max([document.body.clientHeight - 200, 220]))
-        .mode("queue")
-        .margin({
-          top: 60,
-          bottom: 10,
-          left: 80,
-          right: 20
-        })
-        .data(data)
-        .hideAxis(["id"])
-        .render()
-        .reorderable()
-        .brushMode("1D-axes-multi")
-        .brushedColor(function (d) {
-          if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
-          if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
-          if (d["Infil"] == 0.15) return "rgb(122, 40, 55)";
-          if (d["Infil"] == 0.1) return "rgb(165,100,64)";
-        })
-        .color(function (d) {
-          if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
-          if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
-          if (d["Infil"] == 0.15) return "rgb(122, 40, 55)";
-          if (d["Infil"] == 0.1) return "rgb(165,100,64)";
-        })
-      
-      
-      
-      // slickgrid needs each data element to have an id
-      data.forEach(function (d, i) {
-        d.id = d.id || i;
-      });
-      // setting up grid
-      var column_keys = d3.keys(data[0]);
-      // console.log("column keys", column_keys);
-      var columns = column_keys.map(function (key, i) {
-        for (col in columns) {
-          wrap(col, 3);
-        }
-        return {
-          id: key,
-          name: key,
-          field: key,
-          sortable: true,
-        };
-      });
-      // console.log("columns", columns);
-      console.log("columns", columns);
-      
+    </div>
+    <!-- <div id="pager"></div> -->
+    <script id="brushing">
+        var parcoords = ParCoords()("#example");
+        // load csv file and create the chart
+        // d3.csv('data/nutrients.csv').then(function(data) {
+        d3.csv('data/PSB-P2-Results v10v5rev2.csv').then(function(data) {
+        // d3.csv('data/cars.csv').then(function(data) {
+        // d3.csv('data/combo17.csv').then(function(data) {
+        // d3.csv('data/movies.csv').then(function(data) {
+        // d3.csv('data/planets.csv').then(function(data) {
+        // d3.csv('data/sales_flow_cn.csv').then(function(data) {
 
-      var options = {
-        enableCellNavigation: true,
-        enableColumnReorder: true,
-        multiColumnSort: true,
-      };
+            var myColor = function(d) {
+                if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
+                if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
+                if (d["Infil"] == 0.15) return "rgb(122, 40, 55)";
+                if (d["Infil"] == 0.1) return "rgb(165,100,64)";
+            }
+          
+            // slickgrid needs each data element to have an id
+            data.forEach(function(d,i) { d.id = d.id || i; });
+        
+            parcoords
+                .data(data)
+                .color(myColor)
+                .hideAxis(["id"])
+                .margin({ top: 24, left: 60, bottom: 12, right: 0 })
+                .height(d3.max([document.body.clientHeight-326, 220]))
+                .mode("queue") // progressive rendering
+                .alpha(0.4)
+                .render()
+                .reorderable()
+                .brushMode("1D-axes");
+        
+          // setting up grid
+          var column_keys = d3.keys(data[0]);
+          console.log(column_keys);
+          var columns = column_keys.map(function(key,i) {
+            return {
+              id: key,
+              name: key,
+              field: key,
+              sortable: true
+            }
+          });
+        
+          var options = {
+            enableCellNavigation: true,
+            enableColumnReorder: false,
+            multiColumnSort: false,
+            forceFitColumns: true
+          };
+        
+          var dataView = new Slick.Data.DataView();
+          var grid = new Slick.Grid("#grid", dataView, columns, options);
+          var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+        
+          // wire up model events to drive the grid
+          dataView.onRowCountChanged.subscribe(function (e, args) {
+            grid.updateRowCount();
+            grid.render();
+          });
+        
+          dataView.onRowsChanged.subscribe(function (e, args) {
+            grid.invalidateRows(args.rows);
+            grid.render();
+          });
+        
+          // column sorting
+          var sortcol = column_keys[0];
+          var sortdir = 1;
+        
+          function comparer(a, b) {
+            var x = a[sortcol], y = b[sortcol];
+            return (x == y ? 0 : (x > y ? 1 : -1));
+          }
+          
+          // click header to sort grid column
+          grid.onSort.subscribe(function (e, args) {
+            sortdir = args.sortAsc ? 1 : -1;
+            sortcol = args.sortCol.field;
+        
+            if ($.browser.msie && $.browser.version <= 8) {
+              dataView.fastSort(sortcol, args.sortAsc);
+            } else {
+              dataView.sort(comparer, args.sortAsc);
+            }
+          });
+        
+          // highlight row in chart
+          grid.onMouseEnter.subscribe(function(e,args) {
+            // Get row number from grid
+            var grid_row = grid.getCellFromEvent(e).row;
+        
+            // Get the id of the item referenced in grid_row
+            var item_id = grid.getDataItem(grid_row).id;
+            var d = parcoords.brushed() || data;
+        
+            // Get the element position of the id in the data object
+            elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
+        
+            // Highlight that element in the parallel coordinates graph
+            parcoords.highlight([d[elementPos]]);
+          });
 
-      var dataView = new Slick.Data.DataView();
-      var grid = new Slick.Grid("#grid", dataView, columns, options);
-      var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
-
-      // wire up model events to drive the grid
-      dataView.onRowCountChanged.subscribe(function (e, args) {
-        grid.updateRowCount();
-        grid.render();
-      });
-
-      dataView.onRowsChanged.subscribe(function (e, args) {
-        grid.invalidateRows(args.rows);
-        grid.render();
-      });
-
-      // column sorting
-      var sortcol = column_keys[0];
-      var sortdir = 1;
-
-      function comparer(a, b) {
-        var x = a[sortcol],
-          y = b[sortcol];
-        return x == y ? 0 : x > y ? 1 : -1;
-      }
-
-      // click header to sort grid column
-      grid.onSort.subscribe(function (e, args) {
-        sortdir = args.sortAsc ? 1 : -1;
-        sortcol = args.sortCol.field;
-
-        if ($.browser.msie && $.browser.version <= 8) {
-          dataView.fastSort(sortcol, args.sortAsc);
-        } else {
-          dataView.sort(comparer, args.sortAsc);
-        }
-      });
-
-      // highlight row in chart
-      grid.onMouseEnter.subscribe(function (e, args) {
-        var i = grid.getCellFromEvent(e).row;
-        var d = parcoords.brushed() || data;
-        parcoords.highlight([d[i]]);
-      });
-      grid.onMouseLeave.subscribe(function (e, args) {
-        parcoords.unhighlight();
-      });
-
-      // fill grid with data
-      gridUpdate(data);
-
-      // update grid on brush
-      parcoords.on("brush", function (d) {
-        gridUpdate(d);
-      });
-
-      function gridUpdate(data) {
-        dataView.beginUpdate();
-        dataView.setItems(data);
-        dataView.endUpdate();
-      }
-    }
-
-    // CSV Uploader
-    // var uploader = document.getElementById("uploader");
-    // var reader = new FileReader();
-
-    // reader.onload = function (e) {
-    //   var contents = e.target.result;
-    //   var data = d3.csvParse(contents);
-    //   parallelCoordinates(data);
-
-    //   // remove button, since re-initializing doesn't work for now
-    //   uploader.parentNode.removeChild(uploader);
-    // };
-
-    d3.csv('PSB-P2-Results v10v5rev2.csv')
-      .then(function(data) {
-        parallelCoordinates(data);
-      // data is now whole data set
-      // draw chart in here!
-      })
-      .catch(function(error){
-      // handle error   
-      })
-
-    // uploader.addEventListener("change", handleFiles, false);
-
-    // function handleFiles() {
-    //   var file = this.files[0];
-    //   reader.readAsText(file);
-    // }
-  </script>
+            // Downloads a screenshot. Used when clicking on a grid row.
+            function downloadScreenshot() {
+                var callback = function (canvas) {
+                    // Download the image
+                    var download = document.createElement("a");
+                    download.href = canvas.toDataURL("image/png");
+                    download.download = "parallel-coordinate.png";
+                    download.click();
+                };
+                    parcoords.mergeParcoords(callback);
+            };
+            
+          grid.onClick.subscribe(function(e, args){
+            // Get row number from grid
+            var grid_row = grid.getCellFromEvent(e).row;
+        
+            // Get the id of the item referenced in grid_row
+            var item_id = grid.getDataItem(grid_row).id;
+            var d = parcoords.brushed() || data;
+        
+            // Get the element position of the id in the data object
+            elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
+        
+            downloadScreenshot()
+          });
+        
+          grid.onMouseLeave.subscribe(function(e,args) {
+            parcoords.unhighlight();
+          });
+        
+          // fill grid with data
+          gridUpdate(data);
+        
+          // update grid on brush
+          parcoords.on("brush", function(d) {
+            gridUpdate(d);
+          });
+        
+          function gridUpdate(data) {
+            dataView.beginUpdate();
+            dataView.setItems(data);
+            dataView.endUpdate();
+          };
+        
+        });
+        </script>
 </body>
-
 </html>
