@@ -1,0 +1,26 @@
+body, html {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-size: 12px;
+    padding: 0;
+  }
+  #grid, #pager {
+    position: fixed;
+    width: 100%;
+  }
+  #grid {
+    bottom: 0;
+    height: 300px;
+  }
+  #pager {
+    bottom: 306px;
+    height: 20px;
+  }
+  .slick-row:hover {
+    font-weight: bold;
+    color: #069;
+  }
+  #example { height: 600px; width: 98%; }
+  #example text { font-size: 10px; }
