@@ -49,11 +49,13 @@ input {
 }
 
 /*SlickGrid */
+/*  
 #grid {
-  width: 100% !important;  /* vs jquery resizable */
-  height: 260px;
+  width: 100%;  vs jquery resizable
+  height: 100%;
   margin-top: 4px;
 }
+*/
 .slick-header-column {
   font-weight:bold;
   cursor: move;

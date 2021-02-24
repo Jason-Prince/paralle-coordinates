@@ -6,14 +6,14 @@ body, html {
     font-size: 12px;
     padding: 0;
   }
-  #grid, #pager {
+  /* #grid, #pager {
     position: fixed;
     width: 100%;
-  }
-  #grid {
+  } */
+  /* #grid {
     bottom: 0;
     height: 300px;
-  }
+  } */
   #pager {
     bottom: 306px;
     height: 20px;
@@ -22,5 +22,5 @@ body, html {
     font-weight: bold;
     color: #069;
   }
-  #example { height: 600px; width: 98%; }
+  #example { height: 95%; width: 95%; }
   #example text { font-size: 10px; }

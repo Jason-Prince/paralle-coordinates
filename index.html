@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parallel Coordinates</title>
     <link rel="stylesheet" href="./styles/index.css">
-    <script src="./lib/d3.v5.min.js"></script>
+    <!-- <script src="./lib/d3.v5.min.js"></script> -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="./lib/divgrid.js"></script>
     <script src="./lib/jquery-1.7.min.js"></script>
     <script src="./lib/jquery.event.drag-2.0.min.js"></script>
@@ -16,15 +17,19 @@
     <script src="./lib/slick.grid.js"></script>
     <script src="./lib/slick.pager.js"></script>
     <script src="./lib/underscore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script> -->
+
 </head>
 
 <body>
-    <div id="example" class="parcoords" style="height:600px;">
-        
-    </div>
-    <pre id=json><code></code></pre>
-    <div id="grid">
-
+    <div class="container">
+      <div  class="parallel-card">
+        <div id="example" class="parcoords"></div>
+      </div>
+      <div class="card-grid">
+        <div id="grid" class="grid"></div>
+      </div>
     </div>
     <!-- <div id="pager"></div> -->
     <script id="brushing">
@@ -39,20 +44,25 @@
         // d3.csv('data/sales_flow_cn.csv').then(function(data) {
 
             var myColor = function(d) {
-                if (d["Infil"] == 0.25) return "rgb(64, 130, 165)";
-                if (d["Infil"] == 0.2) return "rgb(40, 122, 107)";
-                if (d["Infil"] == 0.15) return "rgb(122, 40, 55)";
-                if (d["Infil"] == 0.1) return "rgb(165,100,64)";
+                if (d["Infil"] == 0.25) return "#4189A6";
+                if (d["Infil"] == 0.2) return "#6DA638";
+                if (d["Infil"] == 0.15) return "#9D51A6";
+                if (d["Infil"] == 0.1) return "#A66E30";
             }
-          
+
+                       
+            // var myColor2 = d3.ordinal()
+            // .domain(["0.25", "0.2", "0.15", "0.1" ])
+            // .range([ "#440154ff", "#21908dff", "#fde725ff", "#A66E30"])
+            
             // slickgrid needs each data element to have an id
             data.forEach(function(d,i) { d.id = d.id || i; });
-        
+            
             parcoords
                 .data(data)
                 .color(myColor)
                 .hideAxis(["id"])
-                .margin({ top: 24, left: 60, bottom: 12, right: 0 })
+                // .margin({ top: 24, left: 60, bottom: 12, right: 0 })
                 .height(d3.max([document.body.clientHeight-326, 220]))
                 .mode("queue") // progressive rendering
                 .alpha(0.4)
@@ -61,7 +71,7 @@
                 .brushMode("1D-axes");
         
           // setting up grid
-          var column_keys = d3.keys(data[0]);
+          var column_keys = Object.keys(data[0]);
           console.log(column_keys);
           var columns = column_keys.map(function(key,i) {
             return {
@@ -129,20 +139,11 @@
         
             // Highlight that element in the parallel coordinates graph
             parcoords.highlight([d[elementPos]]);
+            
           });
 
-            // Downloads a screenshot. Used when clicking on a grid row.
-            function downloadScreenshot() {
-                var callback = function (canvas) {
-                    // Download the image
-                    var download = document.createElement("a");
-                    download.href = canvas.toDataURL("image/png");
-                    download.download = "parallel-coordinate.png";
-                    download.click();
-                };
-                    parcoords.mergeParcoords(callback);
-            };
-            
+         
+                        
           grid.onClick.subscribe(function(e, args){
             // Get row number from grid
             var grid_row = grid.getCellFromEvent(e).row;
@@ -153,8 +154,42 @@
         
             // Get the element position of the id in the data object
             elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
-        
-            downloadScreenshot()
+            
+            var obj = [d[elementPos]];
+            let keyObj = obj[0]
+            let keys = Object.keys(keyObj)
+            console.log(keys);
+
+            let values = Object.values(keyObj)
+            console.log(values);
+
+            // str = JSON.stringify(obj[0], null, 4);
+            // console.log(str);
+
+            pdfMake.fonts = {
+              RobotoMono: {
+                normal: "https://cdnjs.cloudflare.com/ajax/libs/uswds/2.6.0/fonts/roboto-mono/roboto-mono-v5-latin-regular.ttf"
+              }
+            }
+
+            let docDefinition = {content: null, defaultStyle: {font: "RobotoMono"}};
+
+            let keyLengthArray = []
+            let buildKeyLengthArray = keys.map(key => {
+              keyLengthArray.push(key.length)
+            })
+            let maxKeyLength = Math.max(...keyLengthArray)
+            let previousLines = []
+            docDefinition.content = keys.map((key, index) => {
+              let times = (maxKeyLength - key.length + 3)
+              let period = "."
+              let periods = period.repeat(times)
+              let line = `${key}${periods}${values[index]}`
+              previousLines.push(line)
+              let lines = [previousLines]
+              return lines;
+            })
+            pdfMake.createPdf(docDefinition).download();
           });
         
           grid.onMouseLeave.subscribe(function(e,args) {
@@ -176,6 +211,8 @@
           };
         
         });
+        
+        
         </script>
 </body>
 </html>
