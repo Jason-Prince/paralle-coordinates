@@ -18,7 +18,7 @@
     <script src="./lib/slick.pager.js"></script>
     <script src="./lib/underscore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/vfs_fonts.js"></script> -->
+    <script src="./colors/colorArray.js"></script>
 
 </head>
 
@@ -33,7 +33,9 @@
     </div>
     <!-- <div id="pager"></div> -->
     <script id="brushing">
-        var parcoords = ParCoords()("#example");
+
+      var parcoords = ParCoords()("#example");
+      
         // load csv file and create the chart
         // d3.csv('data/nutrients.csv').then(function(data) {
         d3.csv('data/PSB-P2-Results v10v5rev2.csv').then(function(data) {
@@ -42,18 +44,13 @@
         // d3.csv('data/movies.csv').then(function(data) {
         // d3.csv('data/planets.csv').then(function(data) {
         // d3.csv('data/sales_flow_cn.csv').then(function(data) {
-
+          
             var myColor = function(d) {
-                if (d["Infil"] == 0.25) return "#4189A6";
-                if (d["Infil"] == 0.2) return "#6DA638";
-                if (d["Infil"] == 0.15) return "#9D51A6";
-                if (d["Infil"] == 0.1) return "#A66E30";
+              if (d["Infil"] == 0.25) return "#4189A6";
+              if (d["Infil"] == 0.2) return "#6DA638";
+              if (d["Infil"] == 0.15) return "#9D51A6";
+              if (d["Infil"] == 0.1) return "#A66E30";
             }
-
-                       
-            // var myColor2 = d3.ordinal()
-            // .domain(["0.25", "0.2", "0.15", "0.1" ])
-            // .range([ "#440154ff", "#21908dff", "#fde725ff", "#A66E30"])
             
             // slickgrid needs each data element to have an id
             data.forEach(function(d,i) { d.id = d.id || i; });
@@ -62,7 +59,6 @@
                 .data(data)
                 .color(myColor)
                 .hideAxis(["id"])
-                // .margin({ top: 24, left: 60, bottom: 12, right: 0 })
                 .height(d3.max([document.body.clientHeight-326, 220]))
                 .mode("queue") // progressive rendering
                 .alpha(0.4)
@@ -86,7 +82,7 @@
             enableCellNavigation: true,
             enableColumnReorder: false,
             multiColumnSort: false,
-            forceFitColumns: true
+            forceFitColumns: false
           };
         
           var dataView = new Slick.Data.DataView();
@@ -158,13 +154,7 @@
             var obj = [d[elementPos]];
             let keyObj = obj[0]
             let keys = Object.keys(keyObj)
-            console.log(keys);
-
             let values = Object.values(keyObj)
-            console.log(values);
-
-            // str = JSON.stringify(obj[0], null, 4);
-            // console.log(str);
 
             pdfMake.fonts = {
               RobotoMono: {
