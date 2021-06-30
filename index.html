@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parallel Coordinates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles/index.css">
     <!-- <script src="./lib/d3.v5.min.js"></script> -->
     <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -64,7 +67,7 @@
                 .alpha(0.4)
                 .render()
                 .reorderable()
-                .brushMode("1D-axes");
+                .brushMode("1D-axes-multi");
         
           // setting up grid
           var column_keys = Object.keys(data[0]);
