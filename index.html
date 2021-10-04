@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Parallel Coordinates</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/index.css" />
     <!-- <script src="./lib/d3.v5.min.js"></script> -->
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="./lib/divgrid.js"></script>
@@ -22,12 +25,11 @@
     <script src="./lib/underscore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js"></script>
     <script src="./colors/colorArray.js"></script>
+  </head>
 
-</head>
-
-<body>
+  <body>
     <div class="container">
-      <div  class="parallel-card">
+      <div class="parallel-card">
         <div id="example" class="parcoords"></div>
       </div>
       <div class="card-grid">
@@ -36,176 +38,184 @@
     </div>
     <!-- <div id="pager"></div> -->
     <script id="brushing">
-
       var parcoords = ParCoords()("#example");
-      
-        // load csv file and create the chart
-        // d3.csv('data/nutrients.csv').then(function(data) {
-        d3.csv('data/PSB-P2-Results v10v5rev3.csv').then(function(data) {
+
+      // load csv file and create the chart
+      // d3.csv('data/nutrients.csv').then(function(data) {
+      d3.csv("data/PSB-P2-Results v10v5rev3.csv").then(function (data) {
         // d3.csv('data/cars.csv').then(function(data) {
         // d3.csv('data/combo17.csv').then(function(data) {
         // d3.csv('data/movies.csv').then(function(data) {
         // d3.csv('data/planets.csv').then(function(data) {
         // d3.csv('data/sales_flow_cn.csv').then(function(data) {
-          
-            var myColor = function(d) {
-              if (d["Infil"] == 0.25) return "#4189A6";
-              if (d["Infil"] == 0.2) return "#6DA638";
-              if (d["Infil"] == 0.15) return "#9D51A6";
-              if (d["Infil"] == 0.1) return "#A66E30";
-            }
-            
-            // slickgrid needs each data element to have an id
-            data.forEach(function(d,i) { d.id = d.id || i; });
-            
-            parcoords
-                .data(data)
-                .color(myColor)
-                .hideAxis(["id"])
-                .height(d3.max([document.body.clientHeight-326, 220]))
-                .mode("queue") // progressive rendering
-                .alpha(0.4)
-                .render()
-                .reorderable()
-                .brushMode("1D-axes-multi");
-        
-          // setting up grid
-          var column_keys = Object.keys(data[0]);
-          console.log(column_keys);
-          var columns = column_keys.map(function(key,i) {
-            return {
-              id: key,
-              name: key,
-              field: key,
-              sortable: true
-            }
-          });
-        
-          var options = {
-            enableCellNavigation: true,
-            enableColumnReorder: false,
-            multiColumnSort: false,
-            forceFitColumns: false
-          };
-        
-          var dataView = new Slick.Data.DataView();
-          var grid = new Slick.Grid("#grid", dataView, columns, options);
-          var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
-        
-          // wire up model events to drive the grid
-          dataView.onRowCountChanged.subscribe(function (e, args) {
-            grid.updateRowCount();
-            grid.render();
-          });
-        
-          dataView.onRowsChanged.subscribe(function (e, args) {
-            grid.invalidateRows(args.rows);
-            grid.render();
-          });
-        
-          // column sorting
-          var sortcol = column_keys[0];
-          var sortdir = 1;
-        
-          function comparer(a, b) {
-            var x = a[sortcol], y = b[sortcol];
-            return (x == y ? 0 : (x > y ? 1 : -1));
-          }
-          
-          // click header to sort grid column
-          grid.onSort.subscribe(function (e, args) {
-            sortdir = args.sortAsc ? 1 : -1;
-            sortcol = args.sortCol.field;
-        
-            if ($.browser.msie && $.browser.version <= 8) {
-              dataView.fastSort(sortcol, args.sortAsc);
-            } else {
-              dataView.sort(comparer, args.sortAsc);
-            }
-          });
-        
-          // highlight row in chart
-          grid.onMouseEnter.subscribe(function(e,args) {
-            // Get row number from grid
-            var grid_row = grid.getCellFromEvent(e).row;
-        
-            // Get the id of the item referenced in grid_row
-            var item_id = grid.getDataItem(grid_row).id;
-            var d = parcoords.brushed() || data;
-        
-            // Get the element position of the id in the data object
-            elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
-        
-            // Highlight that element in the parallel coordinates graph
-            parcoords.highlight([d[elementPos]]);
-            
-          });
 
-         
-                        
-          grid.onClick.subscribe(function(e, args){
-            // Get row number from grid
-            var grid_row = grid.getCellFromEvent(e).row;
-        
-            // Get the id of the item referenced in grid_row
-            var item_id = grid.getDataItem(grid_row).id;
-            var d = parcoords.brushed() || data;
-        
-            // Get the element position of the id in the data object
-            elementPos = d.map(function(x) {return x.id; }).indexOf(item_id);
-            
-            var obj = [d[elementPos]];
-            let keyObj = obj[0]
-            let keys = Object.keys(keyObj)
-            let values = Object.values(keyObj)
+        var myColor = function (d) {
+          if (d["Infil"] == 0.25) return "#4189A6";
+          if (d["Infil"] == 0.2) return "#6DA638";
+          if (d["Infil"] == 0.15) return "#9D51A6";
+          if (d["Infil"] == 0.1) return "#A66E30";
+        };
 
-            pdfMake.fonts = {
-              RobotoMono: {
-                normal: "https://cdnjs.cloudflare.com/ajax/libs/uswds/2.6.0/fonts/roboto-mono/roboto-mono-v5-latin-regular.ttf"
-              }
-            }
-
-            let docDefinition = {content: null, defaultStyle: {font: "RobotoMono"}};
-
-            let keyLengthArray = []
-            let buildKeyLengthArray = keys.map(key => {
-              keyLengthArray.push(key.length)
-            })
-            let maxKeyLength = Math.max(...keyLengthArray)
-            let previousLines = []
-            docDefinition.content = keys.map((key, index) => {
-              let times = (maxKeyLength - key.length + 3)
-              let period = "."
-              let periods = period.repeat(times)
-              let line = `${key}${periods}${values[index]}`
-              previousLines.push(line)
-              let lines = [previousLines]
-              return lines;
-            })
-            pdfMake.createPdf(docDefinition).download();
-          });
-        
-          grid.onMouseLeave.subscribe(function(e,args) {
-            parcoords.unhighlight();
-          });
-        
-          // fill grid with data
-          gridUpdate(data);
-        
-          // update grid on brush
-          parcoords.on("brush", function(d) {
-            gridUpdate(d);
-          });
-        
-          function gridUpdate(data) {
-            dataView.beginUpdate();
-            dataView.setItems(data);
-            dataView.endUpdate();
-          };
-        
+        // slickgrid needs each data element to have an id
+        data.forEach(function (d, i) {
+          d.id = d.id || i;
         });
-        
-        
-        </script>
-</body>
+
+        parcoords
+          .data(data)
+          .color(myColor)
+          .hideAxis(["id"])
+          .height(d3.max([document.body.clientHeight - 326, 220]))
+          .mode("queue") // progressive rendering
+          .alpha(0.4)
+          .render()
+          .reorderable()
+          .brushMode("1D-axes-multi");
+
+        // setting up grid
+        var column_keys = Object.keys(data[0]);
+        console.log(column_keys);
+        var columns = column_keys.map(function (key, i) {
+          return {
+            id: key,
+            name: key,
+            field: key,
+            sortable: true,
+          };
+        });
+
+        var options = {
+          enableCellNavigation: true,
+          enableColumnReorder: false,
+          multiColumnSort: false,
+          forceFitColumns: false,
+        };
+
+        var dataView = new Slick.Data.DataView();
+        var grid = new Slick.Grid("#grid", dataView, columns, options);
+        var pager = new Slick.Controls.Pager(dataView, grid, $("#pager"));
+
+        // wire up model events to drive the grid
+        dataView.onRowCountChanged.subscribe(function (e, args) {
+          grid.updateRowCount();
+          grid.render();
+        });
+
+        dataView.onRowsChanged.subscribe(function (e, args) {
+          grid.invalidateRows(args.rows);
+          grid.render();
+        });
+
+        // column sorting
+        var sortcol = column_keys[0];
+        var sortdir = 1;
+
+        function comparer(a, b) {
+          var x = a[sortcol],
+            y = b[sortcol];
+          return x == y ? 0 : x > y ? 1 : -1;
+        }
+
+        // click header to sort grid column
+        grid.onSort.subscribe(function (e, args) {
+          sortdir = args.sortAsc ? 1 : -1;
+          sortcol = args.sortCol.field;
+
+          if ($.browser.msie && $.browser.version <= 8) {
+            dataView.fastSort(sortcol, args.sortAsc);
+          } else {
+            dataView.sort(comparer, args.sortAsc);
+          }
+        });
+
+        // highlight row in chart
+        grid.onMouseEnter.subscribe(function (e, args) {
+          // Get row number from grid
+          var grid_row = grid.getCellFromEvent(e).row;
+
+          // Get the id of the item referenced in grid_row
+          var item_id = grid.getDataItem(grid_row).id;
+          var d = parcoords.brushed() || data;
+
+          // Get the element position of the id in the data object
+          elementPos = d
+            .map(function (x) {
+              return x.id;
+            })
+            .indexOf(item_id);
+
+          // Highlight that element in the parallel coordinates graph
+          parcoords.highlight([d[elementPos]]);
+        });
+
+        grid.onClick.subscribe(function (e, args) {
+          // Get row number from grid
+          var grid_row = grid.getCellFromEvent(e).row;
+
+          // Get the id of the item referenced in grid_row
+          var item_id = grid.getDataItem(grid_row).id;
+          var d = parcoords.brushed() || data;
+
+          // Get the element position of the id in the data object
+          elementPos = d
+            .map(function (x) {
+              return x.id;
+            })
+            .indexOf(item_id);
+
+          var obj = [d[elementPos]];
+          let keyObj = obj[0];
+          let keys = Object.keys(keyObj);
+          let values = Object.values(keyObj);
+
+          pdfMake.fonts = {
+            RobotoMono: {
+              normal:
+                "https://cdnjs.cloudflare.com/ajax/libs/uswds/2.6.0/fonts/roboto-mono/roboto-mono-v5-latin-regular.ttf",
+            },
+          };
+
+          let docDefinition = {
+            content: null,
+            defaultStyle: { font: "RobotoMono" },
+          };
+
+          let keyLengthArray = [];
+          let buildKeyLengthArray = keys.map((key) => {
+            keyLengthArray.push(key.length);
+          });
+          let maxKeyLength = Math.max(...keyLengthArray);
+          let previousLines = [];
+          docDefinition.content = keys.map((key, index) => {
+            let times = maxKeyLength - key.length + 3;
+            let period = ".";
+            let periods = period.repeat(times);
+            let line = `${key}${periods}${values[index]}`;
+            previousLines.push(line);
+            let lines = [previousLines];
+            return lines;
+          });
+          pdfMake.createPdf(docDefinition).download();
+        });
+
+        grid.onMouseLeave.subscribe(function (e, args) {
+          parcoords.unhighlight();
+        });
+
+        // fill grid with data
+        gridUpdate(data);
+
+        // update grid on brush
+        parcoords.on("brush", function (d) {
+          gridUpdate(d);
+        });
+
+        function gridUpdate(data) {
+          dataView.beginUpdate();
+          dataView.setItems(data);
+          dataView.endUpdate();
+        }
+      });
+    </script>
+  </body>
 </html>
